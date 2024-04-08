@@ -1,5 +1,4 @@
 import { LeafletMap } from '@/components/LeafletMap';
-import { OLMap } from '@/components/OLMap';
 
 export default function Home() {
   return (
