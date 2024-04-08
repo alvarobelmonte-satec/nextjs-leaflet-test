@@ -41,6 +41,12 @@ const map = signal(null);
 const currentControl = signal(null);
 const controls = signal([]);
 
+const customMarkerIcon = L.icon({
+  iconUrl: 'marker.png',
+  iconSize: [32, 32], // Tamaño del icono
+  iconAnchor: [16, 32] // Punto de anclaje del icono (donde se coloca en el mapa)
+});
+
 export const LeafletMap = () => {
   useSignals();
   let drawnItems = new FeatureGroup(); // Crea un FeatureGroup para almacenar los polígonos dibujados
@@ -84,8 +90,14 @@ export const LeafletMap = () => {
     const drawControl = new Control.Draw({
       position: 'bottomleft',
       draw: {
-        marker: true,
-        polyline: true,
+        marker: {
+          icon: customMarkerIcon
+        },
+        polyline: {
+          shapeOptions: {
+            color: layerColors[index].color
+          }
+        },
         polygon: {
           shapeOptions: {
             color: layerColors[index].color
@@ -96,8 +108,12 @@ export const LeafletMap = () => {
             color: layerColors[index].color
           }
         },
-        circle: true,
-        circlemarker: true
+        circle: {
+          shapeOptions: {
+            color: layerColors[index].color
+          }
+        },
+        circlemarker: false
       },
       edit: {
         featureGroup: currentLayer.value
@@ -190,8 +206,14 @@ export const LeafletMap = () => {
     const newDrawControl = new Control.Draw({
       position: 'bottomleft',
       draw: {
-        marker: true,
-        polyline: true,
+        marker: {
+          icon: customMarkerIcon
+        },
+        polyline: {
+          shapeOptions: {
+            color: layerColors[index].color
+          }
+        },
         polygon: {
           shapeOptions: {
             color: layerColors[index].color
@@ -202,8 +224,12 @@ export const LeafletMap = () => {
             color: layerColors[index].color
           }
         },
-        circle: true,
-        circlemarker: true
+        circle: {
+          shapeOptions: {
+            color: layerColors[index].color
+          }
+        },
+        circlemarker: false
       },
       edit: {
         featureGroup: currentLayer.value
@@ -250,11 +276,22 @@ export const LeafletMap = () => {
     document.body.removeChild(element);
   };
 
+  const getLabelColor = () => {
+    const currentLayerIndex = layers.value.indexOf(currentLayer.value);
+    if (currentLayerIndex === 0) {
+      return 'bg-green-100 text-green-800 border border-green-400';
+    } else if (currentLayerIndex === 1) {
+      return 'bg-blue-100 text-blue-800 border border-blue-400';
+    } else if (currentLayerIndex === 2) {
+      return 'bg-purple-100 text-purple-800 border border-purple-400';
+    }
+  };
+
   return (
     <>
       <div className="flex">
-        <div id="map" style={{ height: '800px', width: '1000px' }} />
-        <section className="ml-4 flex flex-col">
+        <div id="map" style={{ height: '700px', width: '900px' }} />
+        <section className="ml-8 flex flex-col">
           {layers.value.length < 3 && (
             <button
               className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -265,7 +302,7 @@ export const LeafletMap = () => {
             </button>
           )}
           <div className="mt-4">
-            <span className=" bg-green-100 text-green-800 text-lg font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
+            <span className={`${getLabelColor()} text-xl font-medium me-2 px-2.5 py-0.5 rounded `}>
               {currentLayer.value?.name}
             </span>
             <h1 className="my-3 text-2xl font-semibold text-gray-900 dark:text-white">Layers</h1>
@@ -289,14 +326,16 @@ export const LeafletMap = () => {
                         Set Current Layer
                       </button>
                     </td>
-                    
+
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {currentLayer.value === layer && <button
-                        className="bg-purple-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={exportLayerToGeoJSON}
-                      >
-                        Export to GeoJSON
-                      </button>}
+                      {currentLayer.value === layer && (
+                        <button
+                          className="bg-purple-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                          onClick={exportLayerToGeoJSON}
+                        >
+                          Export to GeoJSON
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
