@@ -1,7 +1,7 @@
 'use client'
 import dynamic from "next/dynamic";
 
-export const LeafletComponent = dynamic(
+const LeafletComponent = dynamic(
   () => import('@/components/LeafletMap')
     // this part is needed if your use a named export
     // you can replace by ".default" when using a default export
