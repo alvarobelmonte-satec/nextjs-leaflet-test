@@ -289,13 +289,14 @@ export const LeafletMap = () => {
                         Set Current Layer
                       </button>
                     </td>
+                    
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      <button
+                    {currentLayer.value === layer && <button
                         className="bg-purple-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                         onClick={exportLayerToGeoJSON}
                       >
                         Export to GeoJSON
-                      </button>
+                      </button>}
                     </td>
                   </tr>
                 ))}
