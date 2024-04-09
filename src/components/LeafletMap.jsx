@@ -16,8 +16,6 @@ import { signal } from '@preact/signals-react';
 import { useSignals } from '@preact/signals-react/runtime';
 
 
-import '@/scripts/heatmap.min.js'; 
-import '@/scripts/leaflet-heatmap.js';
 import '@/scripts/leaflet-heat.js';
 
 const selectedColor = '#ff0000';
