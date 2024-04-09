@@ -15,6 +15,11 @@ import React, { useEffect } from 'react';
 import { signal } from '@preact/signals-react';
 import { useSignals } from '@preact/signals-react/runtime';
 
+
+import '@/scripts/heatmap.min.js'; 
+import '@/scripts/leaflet-heatmap.js';
+import '@/scripts/leaflet-heat.js';
+
 const selectedColor = '#ff0000';
 const layerOneColor = '#00c735';
 const layerTwoColor = '#00c7ff';
@@ -50,6 +55,7 @@ const customMarkerIcon = L.icon({
 export const LeafletMap = () => {
   useSignals();
   let drawnItems = new FeatureGroup(); // Crea un FeatureGroup para almacenar los polígonos dibujados
+  let heatmapLayer = new FeatureGroup();
 
   useEffect(() => {
     layers.value = [drawnItems];
@@ -61,21 +67,51 @@ export const LeafletMap = () => {
       'https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg'
     );
 
+    //Heatmap
+    const coordinates = [-9.040999983945547, 13.244614997258907];
+    const numPoints = 1000;
+    const heatData = [];
+
+    for (let i = 0; i < numPoints; i++) {
+        const lat = coordinates[0] + (Math.random() - 0.5) * 0.05;
+        const lng = coordinates[1] + (Math.random() - 0.5) * 0.05; 
+        const intensity = Math.random() * 1; 
+        heatData.push([lat, lng, intensity]);
+    }
+
+
     map.value = new Map('map', {
       center: [-9.03802151421788, 13.25291273927196],
       zoom: 15,
-      layers: [tile1, tile2]
+      layers: [tile1, tile2, tile3],
     });
+
+    const heat = L.heatLayer(
+      heatData
+    , {
+      radius: 25,
+      blur: 15,
+      maxZoom: 17,
+      gradient: {
+        0.4: 'blue',
+        0.6: 'cyan',
+        0.7: 'lime',
+        0.8: 'yellow',
+        1: 'red'
+      }
+    }).addTo(heatmapLayer);
 
     const baseMaps = {
       OpenStreetMap: tile1,
       'OpenStreetMap.HOT': tile2,
-      'Stadia.AlidadeSmooth': tile3
+      'Stadia.AlidadeSmooth': tile3,
     };
 
     const overlayMaps = {
-      'Layer - 1': layers.value[0]
+      'Layer - 1': layers.value[0],
+      'Heatmap': heatmapLayer
     };
+
 
     layerControl.value = control.layers(baseMaps, overlayMaps).addTo(map.value);
 
@@ -113,7 +149,11 @@ export const LeafletMap = () => {
             color: layerColors[index].color
           }
         },
-        circlemarker: false
+        circlemarker: {
+          shapeOptions: {
+            color: layerColors[index].color
+          }
+        }
       },
       edit: {
         featureGroup: currentLayer.value
@@ -229,7 +269,11 @@ export const LeafletMap = () => {
             color: layerColors[index].color
           }
         },
-        circlemarker: false
+        circlemarker: {
+          shapeOptions: {
+            color: layerColors[index].color
+          }
+        }
       },
       edit: {
         featureGroup: currentLayer.value
