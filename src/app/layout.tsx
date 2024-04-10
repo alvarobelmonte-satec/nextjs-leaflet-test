@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import FormbricksProvider from '@/components/FormBricks';
+import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,7 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <FormbricksProvider />
+      <Suspense>
+        <FormbricksProvider />
+      </Suspense>
       <body className={inter.className}>{children}</body>
     </html>
   );
