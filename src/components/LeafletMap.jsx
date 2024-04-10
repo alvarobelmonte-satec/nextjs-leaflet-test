@@ -115,7 +115,7 @@ export const LeafletMap = () => {
     const baseMaps = {
       OpenStreetMap: tile1,
       'OpenStreetMap.HOT': tile2,
-      'Stadia.AlidadeSmooth': tile3
+      'Esri.WorldImagery': tile3
     };
 
     const overlayMaps = {
@@ -438,7 +438,7 @@ export const LeafletMap = () => {
               </tbody>
             </table>
 
-            <div class="relative overflow-x-auto">
+            <div className="relative overflow-x-auto">
               <h1 className="my-3 text-2xl font-semibold text-gray-900 dark:text-white">
                 Selected Items
               </h1>
