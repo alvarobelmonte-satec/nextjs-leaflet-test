@@ -15,7 +15,6 @@ import React, { useEffect } from 'react';
 import { signal } from '@preact/signals-react';
 import { useSignals } from '@preact/signals-react/runtime';
 
-
 import '@/scripts/leaflet-heat.js';
 
 const selectedColor = '#ff0000';
@@ -54,6 +53,7 @@ export const LeafletMap = () => {
   useSignals();
   let drawnItems = new FeatureGroup(); // Crea un FeatureGroup para almacenar los polígonos dibujados
   let heatmapLayer = new FeatureGroup();
+  let imageOverlayLayer = new FeatureGroup();
 
   useEffect(() => {
     layers.value = [drawnItems];
@@ -71,22 +71,35 @@ export const LeafletMap = () => {
     const heatData = [];
 
     for (let i = 0; i < numPoints; i++) {
-        const lat = coordinates[0] + (Math.random() - 0.5) * 0.05;
-        const lng = coordinates[1] + (Math.random() - 0.5) * 0.05; 
-        const intensity = Math.random() * 1; 
-        heatData.push([lat, lng, intensity]);
+      const lat = coordinates[0] + (Math.random() - 0.5) * 0.05;
+      const lng = coordinates[1] + (Math.random() - 0.5) * 0.05;
+      const intensity = Math.random() * 1;
+      heatData.push([lat, lng, intensity]);
     }
-
 
     map.value = new Map('map', {
       center: [-9.03802151421788, 13.25291273927196],
       zoom: 15,
-      layers: [tile1, tile2, tile3],
+      layers: [tile1, tile2, tile3]
     });
 
-    const heat = L.heatLayer(
-      heatData
-    , {
+    //Image overlay
+    const imageUrl = 'hiperspectral.png';
+
+    const imageBounds = [
+      [-9.040999983945547, 13.244614997258907],
+      [-9.035999983945547, 13.249614997258907]
+    ];
+
+    const imageOverlay = L.imageOverlay(imageUrl, imageBounds, {
+      opacity: 0.7
+    });
+
+    if (map.value) {
+      imageOverlay.addTo(imageOverlayLayer);
+    }
+
+    const heat = L.heatLayer(heatData, {
       radius: 25,
       blur: 15,
       maxZoom: 17,
@@ -102,14 +115,14 @@ export const LeafletMap = () => {
     const baseMaps = {
       OpenStreetMap: tile1,
       'OpenStreetMap.HOT': tile2,
-      'Stadia.AlidadeSmooth': tile3,
+      'Stadia.AlidadeSmooth': tile3
     };
 
     const overlayMaps = {
       'Layer - 1': layers.value[0],
-      'Heatmap': heatmapLayer
+      Heatmap: heatmapLayer,
+      'Image Overlay': imageOverlayLayer
     };
-
 
     layerControl.value = control.layers(baseMaps, overlayMaps).addTo(map.value);
 
@@ -171,7 +184,6 @@ export const LeafletMap = () => {
       currentLayer.value.addLayer(layer); // Agrega el polígono dibujado al FeatureGroup
 
       // Agrega un evento de clic para seleccionar los polígonos
-
       layer.on('click', function () {
         var eventParentsKeys = Object.keys(this._eventParents);
         var id = Number(eventParentsKeys[0]);
@@ -194,6 +206,45 @@ export const LeafletMap = () => {
           });
         }
       });
+    });
+
+    //agrega un popup al layer
+    drawnItems.bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
+
+    map.value.on('popupopen', function (e) {
+      const layer = e.popup._source;
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Element name';
+      input.value = layer.name ? layer.name : '';
+      input.classList.add('bg-gray-200', 'p-2', 'rounded');
+
+      const button = document.createElement('button');
+      button.textContent = 'Confirm';
+      button.classList.add('mt-4', 'bg-blue-500', 'text-white', 'py-2', 'px-4', 'rounded');
+      button.addEventListener('click', function () {
+        const newName = input.value;
+        layer.name = newName;
+        currentLayerName.value = newName;
+        map.value.closePopup();
+
+        // Update the name in selectedItems
+        const index = selectedItems.value?.findIndex((item) => item === layer);
+        if (index > -1) {
+          selectedItems.value[index].name = newName;
+        }
+
+        //force update
+        selectedItems.value = [...selectedItems.value];
+      });
+
+      const container = document.createElement('div');
+      container.appendChild(input);
+      container.appendChild(document.createElement('br'));
+      container.appendChild(button);
+
+      e.popup.setContent(container);
     });
 
     return () => {
@@ -396,7 +447,7 @@ export const LeafletMap = () => {
                       key={index}
                     >
                       <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Item id {item._leaflet_id}
+                        Plot <b>{item.name}</b>
                       </td>
                       <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <button
