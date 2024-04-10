@@ -62,7 +62,7 @@ export const LeafletMap = () => {
     const tile1 = tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png');
     const tile2 = tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png');
     const tile3 = tileLayer(
-      'https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg'
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg'
     );
 
     //Heatmap
@@ -208,8 +208,8 @@ export const LeafletMap = () => {
       });
     });
 
-    //agrega un popup al layer
-    drawnItems.bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
+    
+    drawnItems.bindPopup('');
 
     map.value.on('popupopen', function (e) {
       const layer = e.popup._source;
@@ -224,19 +224,19 @@ export const LeafletMap = () => {
       button.textContent = 'Confirm';
       button.classList.add('mt-4', 'bg-blue-500', 'text-white', 'py-2', 'px-4', 'rounded');
       button.addEventListener('click', function () {
-        const newName = input.value;
-        layer.name = newName;
-        currentLayerName.value = newName;
-        map.value.closePopup();
+      const newName = input.value;
+      layer.name = newName;
+      currentLayerName.value = newName;
+      map.value.closePopup();
 
-        // Update the name in selectedItems
-        const index = selectedItems.value?.findIndex((item) => item === layer);
-        if (index > -1) {
-          selectedItems.value[index].name = newName;
-        }
+      // Update the name in selectedItems
+      const index = selectedItems.value?.findIndex((item) => item === layer);
+      if (index > -1) {
+        selectedItems.value[index].name = newName;
+      }
 
-        //force update
-        selectedItems.value = [...selectedItems.value];
+      //force update
+      selectedItems.value = [...selectedItems.value];
       });
 
       const container = document.createElement('div');
@@ -245,6 +245,7 @@ export const LeafletMap = () => {
       container.appendChild(button);
 
       e.popup.setContent(container);
+      e.popup.options.offset = [0, 30]; // Set the offset to move the popup to the right
     });
 
     return () => {
@@ -289,6 +290,8 @@ export const LeafletMap = () => {
     map.value.addLayer(newDrawnItems);
 
     currentLayer.value = newDrawnItems;
+
+    currentLayer.value.bindPopup('');
 
     //new addControl same as above but changiong rectangle color
     const index = layers.value.indexOf(currentLayer.value);
