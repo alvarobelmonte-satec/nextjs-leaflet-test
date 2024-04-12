@@ -208,7 +208,6 @@ export const LeafletMap = () => {
       });
     });
 
-    
     drawnItems.bindPopup('');
 
     map.value.on('popupopen', function (e) {
@@ -224,19 +223,19 @@ export const LeafletMap = () => {
       button.textContent = 'Confirm';
       button.classList.add('mt-4', 'bg-blue-500', 'text-white', 'py-2', 'px-4', 'rounded');
       button.addEventListener('click', function () {
-      const newName = input.value;
-      layer.name = newName;
-      currentLayerName.value = newName;
-      map.value.closePopup();
+        const newName = input.value;
+        layer.name = newName;
+        currentLayerName.value = newName;
+        map.value.closePopup();
 
-      // Update the name in selectedItems
-      const index = selectedItems.value?.findIndex((item) => item === layer);
-      if (index > -1) {
-        selectedItems.value[index].name = newName;
-      }
+        // Update the name in selectedItems
+        const index = selectedItems.value?.findIndex((item) => item === layer);
+        if (index > -1) {
+          selectedItems.value[index].name = newName;
+        }
 
-      //force update
-      selectedItems.value = [...selectedItems.value];
+        //force update
+        selectedItems.value = [...selectedItems.value];
       });
 
       const container = document.createElement('div');
