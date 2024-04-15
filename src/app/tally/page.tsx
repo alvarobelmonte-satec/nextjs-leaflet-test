@@ -1,3 +1,5 @@
+'use client';
+import Script from 'next/script';
 import React from 'react';
 
 const styles = {
@@ -13,6 +15,15 @@ export default function SurveysPage() {
         height="100%"
         title="Farmers register"
       ></iframe>
+
+      <Script
+        id="tally-js"
+        src="https://tally.so/widgets/embed.js"
+        onLoad={() => {
+          // @ts-ignore
+          Tally.loadEmbeds();
+        }}
+      />
     </main>
   );
 }

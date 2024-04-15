@@ -21,7 +21,6 @@ export default function RootLayout({
       <Suspense>
         <FormbricksProvider />
       </Suspense>
-      <script async src="https://tally.so/widgets/embed.js"></script>
       <body className={inter.className}>{children}</body>
     </html>
   );
