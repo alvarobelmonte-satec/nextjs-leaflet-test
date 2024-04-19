@@ -117,7 +117,7 @@ export default function ShadcnPage() {
             <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
           </PopoverContent>
         </Popover>
-        <div className={cn('grid gap-2')}>
+        {/*         <div className={cn('grid gap-2')}>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -156,7 +156,7 @@ export default function ShadcnPage() {
               />
             </PopoverContent>
           </Popover>
-        </div>
+        </div> */}
       </div>
       <h2>Toast</h2>
       <div className="grid grid-cols-6 gap-4 m-4">

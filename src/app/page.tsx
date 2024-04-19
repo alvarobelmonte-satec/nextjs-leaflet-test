@@ -20,7 +20,7 @@ export default function Home() {
       <Link title="Form" className="my-4 bg-black text-white py-2 px-4 rounded" href="/surveys">
         Go to surveys
       </Link>
-      <Link title="Form" className="my-4 bg-black text-white py-2 px-4 rounded" href="/surveys">
+      <Link title="Form" className="my-4 bg-black text-white py-2 px-4 rounded" href="/shadcn">
         shadcn
       </Link>
       <LeafletComponent />
