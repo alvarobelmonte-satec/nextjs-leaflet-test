@@ -24,6 +24,10 @@ export default function SurveysPage() {
       <Link href="/youform" className="m-4 bg-pink-500 text-white py-2 px-4 rounded">
         YouForm
       </Link>
+
+      <Link href="/heyform" className="m-4 bg-pink-500 text-white py-2 px-4 rounded">
+        HeyForm
+      </Link>
     </main>
   );
 }

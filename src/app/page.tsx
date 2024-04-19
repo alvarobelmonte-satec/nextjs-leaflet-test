@@ -20,6 +20,9 @@ export default function Home() {
       <Link title="Form" className="my-4 bg-black text-white py-2 px-4 rounded" href="/surveys">
         Go to surveys
       </Link>
+      <Link title="Form" className="my-4 bg-black text-white py-2 px-4 rounded" href="/surveys">
+        shadcn
+      </Link>
       <LeafletComponent />
     </main>
   );

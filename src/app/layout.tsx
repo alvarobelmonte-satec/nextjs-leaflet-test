@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Work_Sans } from 'next/font/google';
 import './globals.css';
 import FormbricksProvider from '@/components/FormBricks';
 import { Suspense } from 'react';
+import { Toaster } from '@/components/ui/toaster';
 
-const inter = Inter({ subsets: ['latin'] });
+const workSans = Work_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -21,7 +22,10 @@ export default function RootLayout({
       <Suspense>
         <FormbricksProvider />
       </Suspense>
-      <body className={inter.className}>{children}</body>
+      <body className={workSans.className}>
+        <Toaster />
+        {children}
+      </body>
     </html>
   );
 }
