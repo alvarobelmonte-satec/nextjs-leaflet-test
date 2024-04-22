@@ -1,4 +1,7 @@
 'use client';
+
+import Link from 'next/link';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -183,6 +186,12 @@ export default function ShadcnPage() {
           Success Toast
         </Button>
       </div>
+      <h2>Table</h2>
+      <Link title="table" href="/payments">
+        <Button variant="outline" className="m-4">
+          See Table
+        </Button>
+      </Link>
     </div>
   );
 }
